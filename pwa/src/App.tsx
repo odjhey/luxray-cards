@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
+import 'swiper/css/effect-cube'
 
 import './App.css'
+import { EffectCube } from 'swiper/modules'
 
 const tmpData: {
   kanji: string
@@ -204,7 +206,15 @@ const FlashCard = () => {
         </div>
       </div>
       <div className="h-full w-full">
-        <Swiper className="h-full w-full">
+        <Swiper
+          className="h-full w-full"
+          effect="cube"
+          cubeEffect={{
+            shadow: false,
+            slideShadows: false,
+          }}
+          modules={[EffectCube]}
+        >
           {tmpData.map((v) => (
             <SwiperSlide key={v.kanji}>
               <SingleCard
