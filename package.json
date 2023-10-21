@@ -1,0 +1,21 @@
+{
+  "name": "luxray-cards",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "odjhey <odjhey@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "pwa:build": "cd pwa && yarn build",
+    "pwa:lint": "cd pwa && yarn lint",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "pwa/src/**/*": [
+      "yarn pwa:lint"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.2"
+  }
+}
