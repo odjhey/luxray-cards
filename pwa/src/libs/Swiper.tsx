@@ -5,7 +5,7 @@ import { SwiperOptions } from 'swiper/types'
 export function Swiper(
   props: PropsWithChildren<SwiperOptions & HtmlHTMLAttributes<HTMLDivElement>>,
 ) {
-  const swiperRef = useRef(null)
+  const swiperRef = useRef<any>()
   const { children, ...rest } = props
 
   useEffect(() => {
@@ -25,12 +25,12 @@ export function Swiper(
   }, [])
 
   return (
-    <swiper-container init="false" ref={swiperRef}>
+    <swiper-container init={false} ref={swiperRef}>
       {children}
     </swiper-container>
   )
 }
-export function SwiperSlide(props) {
+export function SwiperSlide(props: PropsWithChildren) {
   const { children, ...rest } = props
 
   return <swiper-slide {...rest}>{children}</swiper-slide>
