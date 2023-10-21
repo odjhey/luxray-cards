@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 
 function App() {
@@ -11,73 +11,84 @@ function App() {
   )
 }
 
-const CardEntry = (props: PropsWithChildren) => {
-  return (
-    <div className="flex justify-center items-center border border-dashed border-secondary h-full w-full">
-      {props.children}
-    </div>
-  )
-}
-
-const DisplayText = (
-  props: PropsWithChildren<{ show: boolean; size: 'md' | 'sm' }>,
-) => {
-  const [show, setShow] = useState(props.show)
+// TODO: content and sub and etc could be a react node
+const SingleCard = (props: {
+  contents: { content: string; sub: string; help: string }
+  options: { showSub: boolean; showHelp: boolean }
+}) => {
+  const { content, sub, help } = props.contents
+  const { showSub, showHelp } = props.options
 
   return (
-    <div className="flex w-full justify-between p-4">
-      <div className={`flex justify-center items-center w-full`}>
-        <div
-          className={`${props.size === 'md' ? 'text-5xl' : 'text-2xl'} ${
-            show ? '' : 'hidden'
-          }`}
-        >
-          {props.children}
-        </div>
-      </div>
-      <button
-        className="btn"
-        type="button"
-        onClick={() => {
-          setShow((v) => !v)
-        }}
-      >
-        action
-      </button>
+    <div className="flex flex-col justify-center items-center border border-dashed border-primary h-full w-full">
+      <div className="text-9xl py-4">{content}</div>
+      <div className={`text-4xl ${showSub ? '' : 'hidden'}`}>{sub}</div>
+      <div className={`text-xl ${showHelp ? '' : 'hidden'}`}>{help}</div>
     </div>
   )
 }
 
 const FlashCard = () => {
+  const [options, setOptions] = useState<{
+    showSub: boolean
+    showHelp: boolean
+  }>({
+    showSub: false,
+    showHelp: false,
+  })
+
   return (
-    <div className="flex flex-col h-full w-full border border-solid border-primary justify-evenly items-center">
-      <CardEntry>
-        <div className="flex gap-2">
-          <button className="btn">menu1</button>
-          <button className="btn">menu1</button>
+    <div className="flex flex-col h-full w-full border border-solid border-primary items-center">
+      <div className="flex p-2">
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Show Sub</span>
+            <input
+              type="radio"
+              name="radio-show-sub"
+              className="radio radio-sm"
+              checked={options.showSub}
+              onChange={() => {}}
+              onClick={() => {
+                setOptions((prev) => ({ ...prev, showSub: !prev.showSub }))
+              }}
+            />
+          </label>
         </div>
-      </CardEntry>
-      <CardEntry>
-        <DisplayText show={true} size="md">
-          好き
-        </DisplayText>
-      </CardEntry>
-      <CardEntry>
-        <DisplayText show={false} size="md">
-          すき
-        </DisplayText>
-      </CardEntry>
-      <CardEntry>
-        <DisplayText show={false} size="sm">
-          suki
-        </DisplayText>
-      </CardEntry>
-      <CardEntry>
-        <div className="flex gap-2">
-          <button className="btn btn-primary">action</button>
-          <button className="btn btn-secondary">action</button>
+
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Show Help</span>
+            <input
+              type="radio"
+              name="radio-show-help"
+              className="radio radio-sm"
+              checked={options.showHelp}
+              onChange={() => {}}
+              onClick={() => {
+                setOptions((prev) => ({ ...prev, showHelp: !prev.showHelp }))
+              }}
+            />
+          </label>
         </div>
-      </CardEntry>
+      </div>
+      <div className="h-full w-full">
+        <SingleCard
+          contents={{
+            content: '好き',
+            sub: 'すき',
+            help: 'suki',
+          }}
+          options={{
+            showSub: options.showSub,
+            showHelp: options.showHelp,
+          }}
+        />
+      </div>
+      <div className="flex gap-2 p-2">
+        <button className="btn btn-primary">action</button>
+        <button className="btn btn-secondary">action</button>
+      </div>
     </div>
   )
 }
