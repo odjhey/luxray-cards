@@ -1,5 +1,6 @@
 import { castToSnapshot, types } from 'mobx-state-tree'
-import { LibRecord, LibRecordScoreBoard, StateModel } from './root'
+import { LibRecord, StateModel } from './root'
+import { LibRecordScoreBoard } from './scores'
 
 export const UiModel = types
   .model({
@@ -10,17 +11,22 @@ export const UiModel = types
   })
   .views((self) => ({
     getActive: () => {
-      return self.activeLibRecord
+      return {
+        id: self.activeLibRecord?.id ?? '',
+        title: self.activeLibRecord?.title ?? '',
+        sub: self.activeLibRecord?.sub ?? '',
+        notes: self.activeLibRecord?.notes ?? '',
+      }
     },
     getScores: () => {
-      return self.scores?.scores.filter(
-        (s) => s.libRecord.id === self.activeLibRecord?.id,
-      )
-    },
-    getScoreTotal: () => {
       return self.scores?.scores
         .filter((s) => s.libRecord.id === self.activeLibRecord?.id)
-        .reduce((prev, curr) => prev + curr.score, 0)
+        .map((s) => {
+          return {
+            date: s.date,
+            score: s.score,
+          }
+        })
     },
   }))
   .actions((self) => {
@@ -32,19 +38,16 @@ export const UiModel = types
         }
         self.scores = self.stateRef.scoreBoard
       },
-      setActive: (data: { libRecordId: string }) => {
-        const match = self.displayables.find((d) => data.libRecordId === d.id)
-        if (match) {
-          self.activeLibRecord = match
-        }
-      },
       next: () => {
-        // TODO: update to support end of array
         const activeIndex = self.displayables.findIndex(
           (d) => d.id === self.activeLibRecord?.id,
         )
         const nextIndex = activeIndex + 1
-        const next = self.displayables[nextIndex]
+
+        const next =
+          nextIndex >= self.displayables.length
+            ? self.displayables[0]
+            : self.displayables[nextIndex]
         self.activeLibRecord = next
       },
     }
