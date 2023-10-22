@@ -63,6 +63,7 @@ export const Notes = observer(() => {
                       libRecordId: ui.activeLibRecord.id,
                       score: v,
                     })
+                    ui.next()
                   }
                 }}
               >
@@ -127,6 +128,41 @@ export const Notes = observer(() => {
             >
               start
             </button>
+          </div>
+
+          <div className="flex flex-col justify-end items-center gap-1">
+            {ui.scoreFilters.map((v, i) => (
+              <div key={i}>
+                {v.score}x{v.count}
+              </div>
+            ))}
+            <button
+              className="btn btn-md"
+              onClick={() => {
+                ui.addFilter({ count: 4, score: 4 })
+              }}
+            >
+              4 x 4
+            </button>
+            <button
+              className="btn btn-md"
+              onClick={() => {
+                ui.clearFilters()
+              }}
+            >
+              clear
+            </button>
+            <button
+              className="btn btn-md"
+              onClick={() => {
+                ui.applyFilters()
+              }}
+            >
+              apply
+            </button>
+          </div>
+          <div className="flex flex-col justify-start gap-1">
+            {ui.displayableStats().count}
           </div>
         </div>
       </div>

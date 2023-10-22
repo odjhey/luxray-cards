@@ -8,6 +8,12 @@ export const UiModel = types
     displayables: types.array(types.reference(types.late(() => LibRecord))),
     scores: types.maybe(types.reference(types.late(() => LibRecordScoreBoard))),
     stateRef: types.reference(types.late(() => StateModel)),
+    scoreFilters: types.array(
+      types.model({
+        score: types.number,
+        count: types.number,
+      }),
+    ),
   })
   .views((self) => ({
     getActive: () => {
@@ -31,6 +37,41 @@ export const UiModel = types
   }))
   .actions((self) => {
     return {
+      addFilter: (data: { score: number; count: number }) => {
+        self.scoreFilters.push(data)
+      },
+      clearFilters: () => {
+        self.scoreFilters = castToSnapshot([])
+      },
+      displayableStats: () => {
+        return { count: self.displayables.length }
+      },
+      applyFilters: () => {
+        if (self.scoreFilters.length < 0) {
+          return
+        }
+
+        const filtered = [...self.stateRef.libRecords.keys()].filter((k) => {
+          const scores = self.scores?.scores.filter((s) => s.libRecord.id === k)
+          if (scores) {
+            const toRemove = self.scoreFilters.map((f) => {
+              const filteredScores = scores.filter((s) => s.score === f.score)
+              if (filteredScores.length < f.count) {
+                return false
+              }
+              return true
+            })
+
+            return toRemove.some((r) => r === false)
+          }
+          return true
+        })
+
+        self.displayables = castToSnapshot(
+          filtered.map((f) => self.stateRef.libRecords.get(f)),
+        )
+      },
+
       shuffle: () => {
         self.displayables = castToSnapshot(shuffle(self.displayables))
         self.activeLibRecord = self.displayables[0]
