@@ -152,11 +152,52 @@ const SingleCard = (props: {
   const { content, sub, help } = props.contents
   const { showSub, showHelp } = props.options
 
+  const [pressSettings, setPressSettings] = useState({
+    showHelp: false,
+    showSub: false,
+  })
+
   return (
-    <div className="flex flex-col justify-center items-center border border-dashed border-primary h-full w-full">
-      <div className="text-9xl py-4">{content}</div>
-      <div className={`text-4xl ${showSub ? '' : 'hidden'}`}>{sub}</div>
-      <div className={`text-xl ${showHelp ? '' : 'hidden'}`}>{help}</div>
+    <div className="flex flex-col border border-dashed border-primary h-full w-full p-1">
+      <div className="flex flex-col justify-center items-center h-full w-full">
+        <div className="text-9xl py-4">{content}</div>
+        <div
+          className={`text-4xl ${
+            showSub || pressSettings.showSub ? '' : 'invisible'
+          }`}
+        >
+          {sub}
+        </div>
+        <div
+          className={`text-xl ${
+            showHelp || pressSettings.showHelp ? '' : 'invisible'
+          }`}
+        >
+          {help}
+        </div>
+      </div>
+
+      <div className="flex gap-1">
+        {/* TODO: convert to press down and press release */}
+        <button
+          type="button"
+          className="btn"
+          onClick={() => {
+            setPressSettings((prev) => ({ ...prev, showSub: !prev.showSub }))
+          }}
+        >
+          kana
+        </button>
+        <button
+          type="button"
+          className="btn"
+          onClick={() => {
+            setPressSettings((prev) => ({ ...prev, showHelp: !prev.showHelp }))
+          }}
+        >
+          en
+        </button>
+      </div>
     </div>
   )
 }
