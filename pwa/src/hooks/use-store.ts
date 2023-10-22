@@ -9,8 +9,7 @@ import {
 
 export const useStore = () => {
   const [store, setStore] = useState<TRootStore>(
-    // TODO: BUG! not saving. fix later
-    RootStore.create({ userspace: { notes: {} } }),
+    RootStore.create({ userspace: { notes: {}, ui: {} } }),
   )
   const [loading, setLoading] = useState(true)
 
