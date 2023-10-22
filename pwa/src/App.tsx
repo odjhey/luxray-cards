@@ -1,11 +1,11 @@
 import './App.css'
-import { FlashCard } from './components/FlashSwipe'
+import { Notes } from './pages/Notes'
 
 function App() {
   return (
     <>
       <div className="h-screen w-screen">
-        <FlashCard></FlashCard>
+        <Notes></Notes>
       </div>
     </>
   )
