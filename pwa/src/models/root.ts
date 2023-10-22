@@ -20,28 +20,17 @@ export const LibRecordScoreBoard = types.model({
   scores: types.array(LibRecordScore),
 })
 
-export const Userspace = types
-  .model('Userspace', {
-    notes: types.map(
-      types.model({
-        id: types.identifier,
-        content: types.string,
-      }),
-    ),
+export const StateModel = types
+  .model({
+    id: types.identifier,
     libRecords: types.map(LibRecord),
     scoreBoard: types.optional(LibRecordScoreBoard, {
       id: 'default',
       scores: [],
     }),
-    ui: UiModel,
   })
   .actions((self) => {
     return {
-      startView: () => {
-        self.ui.displayables = castToSnapshot([...self.libRecords.keys()])
-        self.ui.setActive({ libRecordId: self.ui.displayables[0].id })
-        self.ui.scores = self.scoreBoard
-      },
       addScore: (data: { libRecordId: string; score: number }) => {
         const match = self.libRecords.get(data.libRecordId)
         if (match) {
@@ -68,6 +57,25 @@ export const Userspace = types
           sub: data.sub,
           notes: data.notes,
         })
+      },
+    }
+  })
+
+export const Userspace = types
+  .model('Userspace', {
+    state: StateModel,
+    notes: types.map(
+      types.model({
+        id: types.identifier,
+        content: types.string,
+      }),
+    ),
+    ui: UiModel,
+  })
+  .actions((self) => {
+    return {
+      arterCreate: () => {
+        self.ui.stateRef = self.state
       },
       newNote: (data: { id: string; content: string }) => {
         const { id, content } = data

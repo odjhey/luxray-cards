@@ -1,11 +1,12 @@
-import { types } from 'mobx-state-tree'
-import { LibRecord, LibRecordScoreBoard } from './root'
+import { castToSnapshot, types } from 'mobx-state-tree'
+import { LibRecord, LibRecordScoreBoard, StateModel } from './root'
 
 export const UiModel = types
   .model({
     activeLibRecord: types.maybe(types.reference(types.late(() => LibRecord))),
     displayables: types.array(types.reference(types.late(() => LibRecord))),
     scores: types.maybe(types.reference(types.late(() => LibRecordScoreBoard))),
+    stateRef: types.reference(types.late(() => StateModel)),
   })
   .views((self) => ({
     getActive: () => {
@@ -19,6 +20,11 @@ export const UiModel = types
   }))
   .actions((self) => {
     return {
+      startView: () => {
+        self.displayables = castToSnapshot([...self.stateRef.libRecords.keys()])
+        self.activeLibRecord = self.displayables[0]
+        self.scores = self.stateRef.scoreBoard
+      },
       setActive: (data: { libRecordId: string }) => {
         const match = self.displayables.find((d) => data.libRecordId === d.id)
         if (match) {

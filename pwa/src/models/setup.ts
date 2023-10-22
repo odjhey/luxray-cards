@@ -34,7 +34,7 @@ export const saveOnChange: StoreMiddleware = (store) => {
 
 export const loadLibRecords: StoreMiddleware = async (store) => {
   tmpData.forEach((record) => {
-    store.userspace?.newLibRecord({
+    store.userspace?.state.newLibRecord({
       id: record.kanji,
       title: record.kanji,
       sub: record.furigana,

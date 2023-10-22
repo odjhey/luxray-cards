@@ -31,7 +31,7 @@ export const Notes = observer(() => {
       <button
         className="btn"
         onClick={() => {
-          userspace.startView()
+          userspace.ui.startView()
         }}
       >
         start
@@ -48,7 +48,7 @@ export const Notes = observer(() => {
         className="btn"
         onClick={() => {
           if (ui.activeLibRecord) {
-            userspace.addScore({
+            userspace.ui.stateRef.addScore({
               libRecordId: ui.activeLibRecord.id,
               score: 1,
             })
