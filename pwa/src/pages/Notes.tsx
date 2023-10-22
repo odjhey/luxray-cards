@@ -1,10 +1,8 @@
 import { observer } from 'mobx-react-lite'
-import { useUserspace } from '../hooks/use-store'
 import { useUi } from '../hooks/use-ui'
 
 export const Notes = observer(() => {
-  const { loading, userspace } = useUserspace()
-  const uiState = useUi()
+  const { loading, ui } = useUi()
 
   if (loading) {
     return (
@@ -14,15 +12,9 @@ export const Notes = observer(() => {
     )
   }
 
-  if (!userspace) {
+  if (!ui) {
     return <div>empty</div>
   }
-
-  if (!uiState.ui) {
-    return <div>empty</div>
-  }
-
-  const ui = uiState.ui
 
   return (
     <>
@@ -31,7 +23,7 @@ export const Notes = observer(() => {
       <button
         className="btn"
         onClick={() => {
-          userspace.ui.startView()
+          ui.startView()
         }}
       >
         start
@@ -48,7 +40,7 @@ export const Notes = observer(() => {
         className="btn"
         onClick={() => {
           if (ui.activeLibRecord) {
-            userspace.ui.stateRef.addScore({
+            ui.scores?.addScore({
               libRecordId: ui.activeLibRecord.id,
               score: 1,
             })

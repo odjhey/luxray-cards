@@ -1,4 +1,4 @@
-import { Instance, castToSnapshot, types } from 'mobx-state-tree'
+import { Instance, types } from 'mobx-state-tree'
 import { UiModel } from './ui'
 
 export const LibRecord = types.model({
@@ -15,10 +15,23 @@ export const LibRecordScore = types.model({
   libRecord: types.reference(LibRecord),
 })
 
-export const LibRecordScoreBoard = types.model({
-  id: types.identifier,
-  scores: types.array(LibRecordScore),
-})
+export const LibRecordScoreBoard = types
+  .model({
+    id: types.identifier,
+    scores: types.array(LibRecordScore),
+  })
+  .actions((self) => {
+    return {
+      addScore: (data: { libRecordId: string; score: number }) => {
+        self.scores.push({
+          id: `${data.libRecordId}-${Date.now()}`,
+          date: new Date(),
+          libRecord: data.libRecordId,
+          score: data.score,
+        })
+      },
+    }
+  })
 
 export const StateModel = types
   .model({
@@ -31,20 +44,6 @@ export const StateModel = types
   })
   .actions((self) => {
     return {
-      addScore: (data: { libRecordId: string; score: number }) => {
-        const match = self.libRecords.get(data.libRecordId)
-        if (match) {
-          self.scoreBoard.scores = castToSnapshot([
-            ...self.scoreBoard.scores,
-            {
-              id: `${data.libRecordId}-${Date.now()}`,
-              date: new Date(),
-              libRecord: match,
-              score: data.score,
-            },
-          ])
-        }
-      },
       newLibRecord: (data: {
         id: string
         title: string
