@@ -1,9 +1,13 @@
 import { observer } from 'mobx-react-lite'
 import { useUi } from '../hooks/use-ui'
-import dayjs from 'dayjs'
+import { useState } from 'react'
 
 export const Notes = observer(() => {
   const { loading, ui } = useUi()
+  const [showOptions, setShowOptions] = useState<{
+    showSub: boolean
+    showNotes: boolean
+  }>({ showNotes: false, showSub: false })
 
   if (loading) {
     return (
@@ -21,37 +25,38 @@ export const Notes = observer(() => {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center w-full h-full">
-        <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center w-full h-full p-2 gap-1">
+        <div className="flex flex-col justify-center items-center border border-dashed border-primary w-full h-full gap-2">
+          <div className="flex gap-1">
+            {ui
+              .getScores()
+              ?.slice(0, 5)
+              .map((v) => (
+                <div
+                  key={v.date.toISOString()}
+                  className="badge-sm badge badge-ghost gap-1"
+                >
+                  {v.score}
+                </div>
+              ))}
+          </div>
           <div className="text-8xl">{title}</div>
-          <div className="text-2xl">{sub}</div>
-          <div className="text-lg">{notes}</div>
+          <div className={`text-2xl ${showOptions.showSub ? '' : 'invisible'}`}>
+            {sub}
+          </div>
+          <div
+            className={`text-lg ${showOptions.showNotes ? '' : 'invisible'}`}
+          >
+            {notes}
+          </div>
         </div>
 
-        <div className="flex flex-col gap-1 p-2">
-          <div className="flex justify-between">
-            <button
-              className="btn"
-              onClick={() => {
-                ui.next()
-              }}
-            >
-              next
-            </button>
-            <button
-              className="btn"
-              onClick={() => {
-                ui.startView()
-              }}
-            >
-              start
-            </button>
-          </div>
-          <div className="flex gap-1">
+        <div className="flex flex-row gap-1 p-2 border border-solid border-secondary w-full h-full">
+          <div className="flex justify-end flex-col gap-1">
             {([1, 2, 3, 4] as const).map((v) => (
               <button
                 key={`${v}-score`}
-                className="btn"
+                className="btn btn-lg"
                 onClick={() => {
                   if (ui.activeLibRecord) {
                     ui.scores?.addScore({
@@ -64,15 +69,49 @@ export const Notes = observer(() => {
                 {v}
               </button>
             ))}
-          </div>
-        </div>
 
-        <div className="max-h-0.5">
-          {ui.getScores()?.map((v) => (
-            <div key={v.date.toISOString()}>
-              {dayjs(v.date).format('YYYY MMM DD')} - {v.score}
-            </div>
-          ))}
+            <button
+              className="btn btn-lg btn-secondary"
+              onClick={() => {
+                ui.next()
+              }}
+            >
+              next
+            </button>
+          </div>
+          <div className="flex flex-col justify-end gap-1">
+            <button
+              className="btn btn-lg"
+              onClick={() => {
+                setShowOptions({
+                  ...showOptions,
+                  showSub: !showOptions.showSub,
+                })
+              }}
+            >
+              furi
+            </button>
+            <button
+              className="btn btn-lg"
+              onClick={() => {
+                setShowOptions({
+                  ...showOptions,
+                  showNotes: !showOptions.showNotes,
+                })
+              }}
+            >
+              en
+            </button>
+            <div className="divider"></div>
+            <button
+              className="btn"
+              onClick={() => {
+                ui.startView()
+              }}
+            >
+              start
+            </button>
+          </div>
         </div>
       </div>
     </>
