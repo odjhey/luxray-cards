@@ -37,8 +37,8 @@ export const loadLibRecords: StoreMiddleware = async (store) => {
     store.userspace?.state.newLibRecord({
       id: record.kanji,
       title: record.kanji,
-      sub: record.furigana,
-      notes: record.en,
+      sub: `${record.furigana.on} - ${record.furigana.kun}`,
+      notes: `${record.en} - ${record.romaji.on} - ${record.romaji.kun}`,
     })
   })
 

@@ -124,7 +124,7 @@ export const FlashCard = () => {
               <SingleCard
                 contents={{
                   content: v.kanji,
-                  sub: v.furigana,
+                  sub: v.furigana.on,
                   help: `${v.romaji} - ${v.en}`,
                 }}
                 options={{
