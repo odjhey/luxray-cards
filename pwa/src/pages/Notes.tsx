@@ -106,6 +106,22 @@ export const Notes = observer(() => {
             <button
               className="btn"
               onClick={() => {
+                ui.prev()
+              }}
+            >
+              prev
+            </button>
+            <button
+              className="btn"
+              onClick={() => {
+                ui.shuffle()
+              }}
+            >
+              shuffle
+            </button>
+            <button
+              className="btn"
+              onClick={() => {
                 ui.startView()
               }}
             >

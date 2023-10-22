@@ -1,7 +1,7 @@
 import localforage from 'localforage'
 import { TRootStore } from './root'
 import { applySnapshot, onSnapshot } from 'mobx-state-tree'
-import { tmpData } from '../data/kanji'
+import { tmpData, topExpressionsData } from '../data/kanji'
 
 type StoreMiddleware = (store: TRootStore) => TRootStore | Promise<TRootStore>
 
@@ -33,7 +33,7 @@ export const saveOnChange: StoreMiddleware = (store) => {
 }
 
 export const loadLibRecords: StoreMiddleware = async (store) => {
-  tmpData.forEach((record) => {
+  ;[...tmpData, ...topExpressionsData].forEach((record) => {
     store.userspace?.state.newLibRecord({
       id: record.kanji,
       title: record.kanji,
