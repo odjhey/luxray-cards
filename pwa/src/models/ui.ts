@@ -17,12 +17,19 @@ export const UiModel = types
         (s) => s.libRecord.id === self.activeLibRecord?.id,
       )
     },
+    getScoreTotal: () => {
+      return self.scores?.scores
+        .filter((s) => s.libRecord.id === self.activeLibRecord?.id)
+        .reduce((prev, curr) => prev + curr.score, 0)
+    },
   }))
   .actions((self) => {
     return {
       startView: () => {
         self.displayables = castToSnapshot([...self.stateRef.libRecords.keys()])
-        self.activeLibRecord = self.displayables[0]
+        if (!self.activeLibRecord) {
+          self.activeLibRecord = self.displayables[0]
+        }
         self.scores = self.stateRef.scoreBoard
       },
       setActive: (data: { libRecordId: string }) => {

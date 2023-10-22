@@ -19,7 +19,6 @@ export const Notes = observer(() => {
   return (
     <>
       <div>{JSON.stringify(ui.activeLibRecord, null, 2)}</div>
-      <div>{JSON.stringify(ui.getScores(), null, 2)}</div>
       <button
         className="btn"
         onClick={() => {
@@ -49,6 +48,7 @@ export const Notes = observer(() => {
       >
         addscore
       </button>
+      <div>{ui.getScoreTotal()}</div>
     </>
   )
 })
