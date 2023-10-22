@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import { RootStore, TRootStore } from '../models/root'
-import { loadFromStorage, saveOnChange, setup } from '../models/setup'
+import {
+  loadFromStorage,
+  loadLibRecords,
+  saveOnChange,
+  setup,
+} from '../models/setup'
 
 export const useStore = () => {
   const [store, setStore] = useState<TRootStore>(
@@ -10,7 +15,7 @@ export const useStore = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setup(store, [saveOnChange, loadFromStorage])
+    setup(store, [saveOnChange, loadFromStorage, loadLibRecords])
       .then((s) => {
         setStore(s)
       })

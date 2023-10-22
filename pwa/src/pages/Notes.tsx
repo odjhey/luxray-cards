@@ -18,7 +18,7 @@ export const Notes = observer(() => {
 
   return (
     <>
-      <div>{JSON.stringify(userspace, null, 2)}</div>
+      <div>{JSON.stringify(userspace.libRecords, null, 2)}</div>
       <button
         className="btn"
         onClick={() => {
