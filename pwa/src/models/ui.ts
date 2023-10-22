@@ -31,6 +31,10 @@ export const UiModel = types
   }))
   .actions((self) => {
     return {
+      shuffle: () => {
+        self.displayables = castToSnapshot(shuffle(self.displayables))
+        self.activeLibRecord = self.displayables[0]
+      },
       startView: () => {
         self.displayables = castToSnapshot([...self.stateRef.libRecords.keys()])
         if (!self.activeLibRecord) {
@@ -50,5 +54,38 @@ export const UiModel = types
             : self.displayables[nextIndex]
         self.activeLibRecord = next
       },
+      prev: () => {
+        const activeIndex = self.displayables.findIndex(
+          (d) => d.id === self.activeLibRecord?.id,
+        )
+        const nextIndex = activeIndex - 1
+
+        const next =
+          nextIndex < 0
+            ? self.displayables[self.displayables.length - 1]
+            : self.displayables[nextIndex]
+        self.activeLibRecord = next
+      },
     }
   })
+
+// function that shuffles a given array, by copilot
+const shuffle = (array: unknown[]) => {
+  let currentIndex = array.length,
+    randomIndex
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex--
+
+    // And swap it with the current element.
+    ;[array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ]
+  }
+
+  return array
+}
